@@ -61,7 +61,7 @@ import { ClickSource } from '../lib/list'
 import memoizeOne from 'memoize-one'
 import { IMatches } from '../../lib/fuzzy-find'
 import { Button } from '../lib/button'
-import { TextBox } from '../lib/text-box'
+import { FilterSelectionTextBox } from '../lib/filter-selection-text-box'
 
 interface IChangesListItem extends IFilterListItem {
   readonly id: string
@@ -247,7 +247,7 @@ export class FilterChangesList extends React.Component<
   IFilterChangesListProps,
   IFilterChangesListState
 > {
-  private filterTextBox: TextBox | undefined = undefined
+  private filterTextBox: FilterSelectionTextBox | undefined = undefined
 
   private isCommittingFileHiddenByFilter = memoizeOne(
     (
@@ -1137,7 +1137,7 @@ export class FilterChangesList extends React.Component<
     this.setState({ filterText: '', filterToIncludedCommit: true })
   }
 
-  private onTextBoxRef = (component: TextBox | null) => {
+  private onTextBoxRef = (component: FilterSelectionTextBox | null) => {
     this.filterTextBox = component ?? undefined
   }
 
@@ -1183,7 +1183,7 @@ export class FilterChangesList extends React.Component<
 
         <label id="changes-list-check-all-label"> {filesDescription}</label>
 
-        <TextBox
+        <FilterSelectionTextBox
           ref={this.onTextBoxRef}
           displayClearButton={true}
           prefixedIcon={octicons.search}
@@ -1228,7 +1228,7 @@ export class FilterChangesList extends React.Component<
             id="changes-list"
             rowHeight={RowHeight}
             filterText={this.state.filterText}
-            filterTextBox={this.filterTextBox}
+            filterTextBox={this.filterTextBox?.textBoxRef?.current ?? undefined}
             onFilterListResultsChanged={this.onFilterListResultsChanged}
             selectedItems={this.state.selectedItems}
             selectionMode="multi"
