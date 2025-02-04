@@ -60,7 +60,6 @@ import { IFilterListGroup, IFilterListItem } from '../lib/filter-list'
 import { ClickSource } from '../lib/list'
 import memoizeOne from 'memoize-one'
 import { IMatches } from '../../lib/fuzzy-find'
-import { Button } from '../lib/button'
 import {
   FilterOption,
   FilterSelectionTextBox,
@@ -1166,10 +1165,6 @@ export class FilterChangesList extends React.Component<
     const disableAllCheckbox =
       files.length === 0 || isCommitting || rebaseConflictState !== null
 
-    const toBeCommittedFilterText = this.state.filterToIncludedCommit
-      ? 'Show files included and not included in the commit'
-      : 'Only show files to be included in the commit'
-
     return (
       <div
         className="header filter-field-row"
@@ -1199,7 +1194,7 @@ export class FilterChangesList extends React.Component<
           filterOptions={[
             {
               id: 'to-be-committed-files',
-              label: 'Checked (to be committed',
+              label: 'Checked (to be committed)',
               value: this.state.filterToIncludedCommit
                 ? CheckboxValue.On
                 : CheckboxValue.Off,
@@ -1207,26 +1202,13 @@ export class FilterChangesList extends React.Component<
           ]}
           onFilterOptionChanged={this.onFilterOptionsChanged}
         />
-
-        <Button
-          onClick={this.onFilterToIncludedInCommit}
-          className={classNames({
-            'included-in-commit-filter-on': this.state.filterToIncludedCommit,
-          })}
-          ariaLabel={toBeCommittedFilterText}
-          tooltip={toBeCommittedFilterText}
-        >
-          <Octicon symbol={octicons.filter} />
-        </Button>
       </div>
     )
   }
 
   private onFilterOptionsChanged = (option: FilterOption) => {
     if (option.id === 'to-be-committed-files') {
-      this.setState({
-        filterToIncludedCommit: option.value === CheckboxValue.On,
-      })
+      this.onFilterToIncludedInCommit()
     }
   }
 
