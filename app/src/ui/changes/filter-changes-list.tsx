@@ -1193,7 +1193,6 @@ export class FilterChangesList extends React.Component<
         <FilterSelectionTextBox
           ref={this.onTextBoxRef}
           displayClearButton={true}
-          prefixedIcon={octicons.search}
           autoFocus={true}
           placeholder={'Filter'}
           className="filter-list-filter-field"

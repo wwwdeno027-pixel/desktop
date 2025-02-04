@@ -18,6 +18,9 @@
     height: 29px;
     flex: 0 0 auto;
 
+    > .filter-selection-text-box {
+      flex-grow: 1;
+    }
 
     > .checkbox-component {
       align-items: center;

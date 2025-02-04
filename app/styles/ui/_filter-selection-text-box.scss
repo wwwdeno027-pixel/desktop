@@ -1,0 +1,32 @@
+.filter-selection-text-box {
+  display: flex;
+  align-items: center;
+  padding-left: var(--spacing);
+  min-width: 0;
+  
+  .text-box-component {
+    input {
+      padding-left: 40px;
+    }
+  }
+
+  > button {
+    left: 30px;  
+    z-index: 1; // make sure the button is on top of the input
+
+    padding: 1px 3px;
+    margin-left: var(--spacing-half);
+    border: none;
+    height: auto;
+    position: absolute;
+    background: none;
+
+    &:focus-visible {
+      outline-offset: 0px;
+    }
+
+    &:hover {
+      color: var(--text-secondary-color);
+    }
+  }
+}

@@ -104,7 +104,7 @@ export class FilterSelectionTextBox extends React.Component<
 
   public render() {
     return (
-      <>
+      <div className="filter-selection-text-box">
         <Button
           onClick={this.onToggleFilterSelection}
           ariaLabel="Filter Options"
@@ -117,7 +117,7 @@ export class FilterSelectionTextBox extends React.Component<
         </Button>
         <TextBox ref={this.textBoxRef} {...this.props} />
         {this.state.isPopoverOpen && this.renderPopover()}
-      </>
+      </div>
     )
   }
 }
