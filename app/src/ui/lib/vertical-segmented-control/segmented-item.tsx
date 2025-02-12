@@ -50,7 +50,6 @@ export class SegmentedItem<T> extends React.Component<
   {}
 > {
   private onDoubleClick = () => {
-    console.log('HOLA onDoubleClick', this.props.value)
     this.props.onDoubleClick(this.props.value)
   }
 
