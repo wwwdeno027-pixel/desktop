@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button } from '../lib/button'
-import { Octicon, syncClockwise } from '../octicons'
+import { gitMerge, Octicon, syncClockwise } from '../octicons'
 import {
   DropdownItem,
   DropdownItemClassName,
@@ -17,6 +17,7 @@ interface IPushPullButtonDropDownProps {
   readonly askForConfirmationOnForcePush: boolean
 
   readonly fetch: () => void
+  readonly fastForward: () => void
   readonly forcePushWithLease: () => void
 }
 
@@ -98,6 +99,13 @@ export class PushPullButtonDropDown extends React.Component<IPushPullButtonDropD
           icon: forcePushIcon,
         }
       }
+      case DropdownItemType.FastForward:
+        return {
+          title: `Fast forward`,
+          description: `Fast forward merge changes from ${remoteName}`,
+          action: this.props.fastForward,
+          icon: gitMerge,
+        }
     }
   }
 

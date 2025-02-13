@@ -725,6 +725,11 @@ export class Dispatcher {
     return this.appStore._pull(repository)
   }
 
+  /** Fast forward the current branch. */
+  public fastForward(repository: Repository): Promise<void> {
+    return this.appStore._fastForward(repository)
+  }
+
   /** Fetch a specific refspec for the repository. */
   public fetchRefspec(
     repository: Repository,
@@ -1119,9 +1124,16 @@ export class Dispatcher {
     repository: Repository,
     branch: Branch,
     mergeStatus: MergeTreeResult | null,
-    isSquash: boolean = false
+    isSquash: boolean = false,
+    fastForwardOnly = false
   ): Promise<void> {
-    return this.appStore._mergeBranch(repository, branch, mergeStatus, isSquash)
+    return this.appStore._mergeBranch(
+      repository,
+      branch,
+      mergeStatus,
+      isSquash,
+      fastForwardOnly
+    )
   }
 
   /**
@@ -2155,6 +2167,8 @@ export class Dispatcher {
           retryAction.files,
           false
         )
+      case RetryActionType.FastForward:
+        return this.fastForward(retryAction.repository)
       default:
         return assertNever(retryAction, `Unknown retry action: ${retryAction}`)
     }

@@ -18,7 +18,16 @@ type CheckoutBranchErrorContext = {
   readonly branchToCheckout: Branch
 }
 
+type FastForwardErrorContext = {
+  /** The Git operation that triggered the error */
+  readonly kind: 'fastForward'
+
+  /** The upstream branch we attempted to fast forward from */
+  readonly upstream: string
+}
+
 /** A custom shape of data for actions to provide to help with error handling */
 export type GitErrorContext =
   | MergeOrPullConflictsErrorContext
   | CheckoutBranchErrorContext
+  | FastForwardErrorContext

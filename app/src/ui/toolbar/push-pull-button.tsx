@@ -29,7 +29,10 @@ import { FoldoutType, IConstrainedValue } from '../../lib/app-state'
 import { ForcePushBranchState } from '../../lib/rebase'
 import { PushPullButtonDropDown } from './push-pull-button-dropdown'
 import { AriaLiveContainer } from '../accessibility/aria-live-container'
-import { enableResizingToolbarButtons } from '../../lib/feature-flag'
+import {
+  enableBranchFastForward,
+  enableResizingToolbarButtons,
+} from '../../lib/feature-flag'
 
 export const DropdownItemClassName = 'push-pull-dropdown-item'
 
@@ -119,6 +122,7 @@ interface IPushPullButtonState {
 export enum DropdownItemType {
   Fetch = 'fetch',
   ForcePush = 'force-push',
+  FastForward = 'fast-forward',
 }
 
 export type DropdownItem = {
@@ -355,6 +359,11 @@ export class PushPullButton extends React.Component<
     this.props.dispatcher.pull(this.props.repository)
   }
 
+  private fastForward = () => {
+    this.closeDropdown()
+    this.props.dispatcher.fastForward(this.props.repository)
+  }
+
   private fetch = () => {
     this.closeDropdown()
 
@@ -391,6 +400,7 @@ export class PushPullButton extends React.Component<
           itemTypes={itemTypes}
           remoteName={this.props.remoteName}
           fetch={this.fetch}
+          fastForward={this.fastForward}
           forcePushWithLease={this.forcePushWithLease}
           askForConfirmationOnForcePush={
             this.props.askForConfirmationOnForcePush
@@ -631,6 +641,12 @@ export class PushPullButton extends React.Component<
 
     if (forcePushBranchState !== ForcePushBranchState.NotAvailable) {
       dropdownItemTypes.push(DropdownItemType.ForcePush)
+    }
+
+    if (enableBranchFastForward()) {
+      if (aheadBehind.ahead === 0 && aheadBehind.behind > 0) {
+        dropdownItemTypes.push(DropdownItemType.FastForward)
+      }
     }
 
     return (

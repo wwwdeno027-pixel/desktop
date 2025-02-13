@@ -151,6 +151,7 @@ import {
   isCoAuthoredByTrailer,
   pull as pullRepo,
   push as pushRepo,
+  merge as mergeBranch,
   renameBranch,
   saveGitIgnore,
   appendIgnoreRule,
@@ -4879,6 +4880,45 @@ export class AppStore extends TypedBaseStore<IAppState> {
     })
   }
 
+  /** Fast forward current branch from upstream */
+  public async _fastForward(repository: Repository): Promise<void> {
+    return this.withPushPullFetch(repository, async () => {
+      const gitStore = this.gitStoreCache.get(repository)
+      const { tip } = this.repositoryStateCache.get(repository).branchesState
+
+      const upstream =
+        (tip.kind === TipState.Valid ? tip.branch.upstream : null) ??
+        'HEAD@{upstream}'
+
+      this.updatePushPullFetchProgress(repository, {
+        kind: 'merge',
+        title: `Fast-forwarding to ${upstream}`,
+        value: 0,
+        branch: upstream,
+      })
+
+      try {
+        await gitStore.performFailableOperation(
+          () => mergeBranch(repository, upstream, false, true),
+          {
+            gitContext: { kind: 'fastForward', upstream },
+            retryAction: { type: RetryActionType.FastForward, repository },
+          }
+        )
+
+        this.updatePushPullFetchProgress(repository, {
+          kind: 'generic',
+          title: __DARWIN__ ? 'Refreshing Repository' : 'Refreshing repository',
+          value: 0.9,
+        })
+
+        await this._refreshRepository(repository)
+      } finally {
+        this.updatePushPullFetchProgress(repository, null)
+      }
+    })
+  }
+
   private async fastForwardBranches(repository: Repository) {
     try {
       const eligibleBranches = await getBranchesDifferingFromUpstream(
@@ -5407,7 +5447,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
     repository: Repository,
     sourceBranch: Branch,
     mergeStatus: MergeTreeResult | null,
-    isSquash: boolean = false
+    isSquash: boolean = false,
+    fastForwardOnly = false
   ): Promise<void> {
     const { multiCommitOperationState: opState } =
       this.repositoryStateCache.get(repository)
@@ -5443,7 +5484,11 @@ export class AppStore extends TypedBaseStore<IAppState> {
       }
     }
 
-    const mergeResult = await gitStore.merge(sourceBranch, isSquash)
+    const mergeResult = await gitStore.merge(
+      sourceBranch,
+      isSquash,
+      fastForwardOnly
+    )
     const { tip } = gitStore
 
     if (mergeResult === MergeResult.Success && tip.kind === TipState.Valid) {

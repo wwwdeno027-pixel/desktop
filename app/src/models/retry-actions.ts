@@ -18,6 +18,7 @@ export enum RetryActionType {
   Squash,
   Reorder,
   DiscardChanges,
+  FastForward,
 }
 
 /** The retriable actions and their associated data. */
@@ -84,4 +85,8 @@ export type RetryAction =
       type: RetryActionType.DiscardChanges
       repository: Repository
       files: ReadonlyArray<WorkingDirectoryFileChange>
+    }
+  | {
+      type: RetryActionType.FastForward
+      repository: Repository
     }

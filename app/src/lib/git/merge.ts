@@ -23,12 +23,17 @@ export enum MergeResult {
 export async function merge(
   repository: Repository,
   branch: string,
-  isSquash: boolean = false
+  isSquash: boolean = false,
+  fastForwardOnly: boolean = false
 ): Promise<MergeResult> {
   const args = ['merge']
 
   if (isSquash) {
     args.push('--squash')
+  }
+
+  if (fastForwardOnly) {
+    args.push('--ff-only')
   }
 
   args.push(branch)

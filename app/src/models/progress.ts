@@ -114,6 +114,11 @@ export interface IMultiCommitOperationProgress extends IProgress {
   readonly totalCommitCount: number
 }
 
+export interface IMergeProgress extends IProgress {
+  kind: 'merge'
+  branch: string
+}
+
 export type Progress =
   | IGenericProgress
   | ICheckoutProgress
@@ -122,3 +127,4 @@ export type Progress =
   | IPushProgress
   | IRevertProgress
   | IMultiCommitOperationProgress
+  | IMergeProgress
