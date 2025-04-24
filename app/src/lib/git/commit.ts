@@ -16,7 +16,10 @@ export async function createCommit(
   repository: Repository,
   message: string,
   files: ReadonlyArray<WorkingDirectoryFileChange>,
-  amend: boolean = false
+  options: {
+    amend?: boolean
+    allowEmpty?: boolean
+  } = {}
 ): Promise<string> {
   // Clear the staging area, our diffs reflect the difference between the
   // working directory and the last commit (if any) so our commits should
@@ -27,8 +30,12 @@ export async function createCommit(
 
   const args = ['-F', '-']
 
-  if (amend) {
+  if (options.amend === true) {
     args.push('--amend')
+  }
+
+  if (options.allowEmpty === true) {
+    args.push('--allow-empty')
   }
 
   const result = await git(
