@@ -2808,7 +2808,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
       isConflictsFlow(
         this.popupManager.areTherePopupsOfType(PopupType.MultiCommitOperation),
         multiCommitOperationState
-      )
+      ) ||
+      multiCommitOperationState.step.kind ===
+        MultiCommitOperationStepKind.AmendCommitStep
     ) {
       return
     }
@@ -5650,6 +5652,46 @@ export class AppStore extends TypedBaseStore<IAppState> {
         repository,
         workingDirectory.files,
         manualResolutions,
+        progressCallback
+      )
+    )
+
+    return result || RebaseResult.Error
+  }
+
+  public async _continueRebaseAfterAmend(repository: Repository) {
+    const {
+      changesState: { workingDirectory },
+      compareState: { commitSHAs },
+      commitLookup,
+    } = this.repositoryStateCache.get(repository)
+
+    const commit = commitLookup.get(commitSHAs[0])
+
+    const context = {
+      summary: commit?.summary ?? 'failed to get summary',
+      description: commit?.body ?? 'failed to get description',
+      trailers: commit?.trailers,
+    }
+
+    const msg = await formatCommitMessage(repository, context)
+
+    const gitStore = this.gitStoreCache.get(repository)
+    await gitStore.performFailableOperation(() =>
+      createCommit(repository, msg, workingDirectory.files, {
+        amend: true,
+        allowEmpty: true,
+      })
+    )
+
+    const progressCallback =
+      this.getMultiCommitOperationProgressCallBack(repository)
+
+    const result = await gitStore.performFailableOperation(() =>
+      continueRebase(
+        repository,
+        workingDirectory.files,
+        new Map(),
         progressCallback
       )
     )

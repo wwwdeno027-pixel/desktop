@@ -1348,6 +1348,12 @@ export class Dispatcher {
     return result
   }
 
+  public continueRebaseAfterAmendCommit(
+    repository: Repository
+  ): Promise<RebaseResult> {
+    return this.appStore._continueRebaseAfterAmend(repository)
+  }
+
   /** aborts an in-flight merge and refreshes the repository's status */
   public async abortMerge(repository: Repository) {
     await this.appStore._abortMerge(repository)
@@ -3555,10 +3561,24 @@ export class Dispatcher {
           theirBranch
         )
         break
+      case RebaseResult.StoppedForAmend:
+        this.startMultiCommitOperationAmendFlow(repository)
+        break
       default:
         // TODO: clear state
         this.appStore._closePopup()
     }
+  }
+
+  private startMultiCommitOperationAmendFlow(repository: Repository) {
+    this.setMultiCommitOperationStep(repository, {
+      kind: MultiCommitOperationStepKind.AmendCommitStep,
+    })
+
+    this.showPopup({
+      type: PopupType.MultiCommitOperation,
+      repository,
+    })
   }
 
   /**
