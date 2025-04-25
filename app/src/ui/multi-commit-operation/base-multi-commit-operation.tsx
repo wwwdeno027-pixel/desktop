@@ -15,7 +15,6 @@ import { PopupType } from '../../models/popup'
 import { Account } from '../../models/account'
 import { IAPIRepoRuleset } from '../../lib/api'
 import { Emoji } from '../../lib/emoji'
-import { AmendCommitDialog } from './dialog/amend-commit-dialog'
 
 export interface IMultiCommitOperationProps {
   readonly repository: Repository
@@ -63,6 +62,7 @@ export abstract class BaseMultiCommitOperation extends React.Component<IMultiCom
   protected abstract onConflictsDialogDismissed: () => void
   protected abstract renderChooseBranch: () => JSX.Element | null
   protected abstract renderCreateBranch: () => JSX.Element | null
+  protected abstract renderAmendCommit: () => JSX.Element | null
 
   protected onFlowEnded = () => {
     this.props.dispatcher.closePopup(PopupType.MultiCommitOperation)
@@ -243,14 +243,7 @@ export abstract class BaseMultiCommitOperation extends React.Component<IMultiCom
       case MultiCommitOperationStepKind.HideConflicts:
         return null
       case MultiCommitOperationStepKind.AmendCommitStep:
-        return (
-          <AmendCommitDialog
-            operation={this.props.state.operationDetail.kind}
-            onContinueRebase={this.onContinueAfterAmendCommit}
-            onAbort={this.onAbort}
-            onDismissed={this.onFlowEnded}
-          />
-        )
+        return this.renderAmendCommit()
       default:
         return assertNever(
           step,

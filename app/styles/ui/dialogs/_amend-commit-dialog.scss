@@ -1,0 +1,35 @@
+dialog.amend-commit-dialog {
+  .dialog-content {
+    .commit-list-item-container {
+      position: relative;
+      background: white;
+      border: var(--base-border);
+      border-radius: var(--border-radius);
+      margin-bottom: var(--spacing);
+
+      .header {
+        background: rgb(242, 248, 254);
+        padding: var(--spacing-half) var(--spacing);
+        font-size: var(--font-size-sm);
+      }
+
+      .commit {
+        font-size: var(--font-size);
+        padding: var(--spacing-half) var(--spacing);
+        width: 100%;
+        max-width: 280px;
+        border-bottom: none;
+
+        .summary {
+          font-weight: var(--font-weight-semibold);
+        }
+
+        .description {
+          display: flex;
+          flex-direction: row;
+          margin-top: 3px;
+        }
+      }
+    }
+  }
+}

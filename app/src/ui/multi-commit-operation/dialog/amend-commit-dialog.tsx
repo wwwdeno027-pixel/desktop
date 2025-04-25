@@ -1,9 +1,16 @@
 import * as React from 'react'
 import { Dialog, DialogContent, DialogFooter } from '../../dialog'
 import { OkCancelButtonGroup } from '../../dialog/ok-cancel-button-group'
+import { Commit } from '../../../models/commit'
+import { CommitListItem } from '../../history/commit-list-item'
+import { Account } from '../../../models/account'
+import { Emoji } from '../../../lib/emoji'
 
 interface IAmendCommitDialogProps {
   readonly operation: string
+  readonly commit: Commit
+  readonly accounts: ReadonlyArray<Account>
+  readonly emoji: Map<string, Emoji>
   readonly onContinueRebase: () => Promise<void>
   readonly onAbort: () => Promise<void>
   readonly onDismissed: () => void
@@ -37,25 +44,33 @@ export class AmendCommitDialog extends React.Component<
   }
 
   public render() {
-    const { operation } = this.props
+    const { operation, commit, emoji, accounts } = this.props
     return (
       <Dialog
-        id="amend-commit-dialog"
+        className="amend-commit-dialog"
         title={
           __DARWIN__
-            ? `Amend Commit: ${operation}`
-            : `Amend commit: ${operation.toLowerCase()}`
+            ? `Amend Commit ${operation}`
+            : `Amend commit ${operation.toLowerCase()}`
         }
         onDismissed={this.props.onDismissed}
         onSubmit={this.onSubmit}
         disabled={this.state.isAborting}
       >
         <DialogContent>
-          <div className="column-left" id="abort-operation-confirmation">
-            <p>
-              You are amending a commit! Go make the changes you want and the
-              hit continue to commit and move to the next one.
-            </p>
+          <div>
+            <p>You are amending the following commit:</p>
+            <div className="commit-list-item-container">
+              <CommitListItem
+                commit={commit}
+                emoji={emoji}
+                gitHubRepository={null}
+                showUnpushedIndicator={false}
+                selectedCommits={[commit]}
+                accounts={accounts}
+              />
+            </div>
+            {this.props.children}
           </div>
         </DialogContent>
         <DialogFooter>
