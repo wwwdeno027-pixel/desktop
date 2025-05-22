@@ -236,6 +236,7 @@ interface IAugmentedSectionFilterListState<T extends IFilterListItem> {
   readonly filterValueChanged: boolean
   // Indices of groups in the filtered list
   readonly groups: ReadonlyArray<number>
+  readonly count: number
 }
 
 /** A List which includes the ability to filter based on its contents. */
@@ -268,6 +269,8 @@ export class AugmentedSectionFilterList<
     prevProps: IAugmentedSectionFilterListProps<T>,
     prevState: IAugmentedSectionFilterListState<T>
   ) {
+    this.setState({ count: this.state.count + 1 })
+
     if (this.props.onSelectionChanged) {
       const oldSelectedItemIds = prevState.selectedRows
         .map(row => getItemIdFromRowIndex(prevState.rows, row))
@@ -891,6 +894,7 @@ function createStateUpdate<T extends IFilterListItem>(
     filterValue: filter,
     filterValueChanged,
     groups: groupIndices,
+    count: state?.count ?? 0,
   }
 }
 
