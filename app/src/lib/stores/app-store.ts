@@ -122,6 +122,7 @@ import {
   ChangesWorkingDirectorySelection,
   isRebaseConflictState,
   isCherryPickConflictState,
+  IFileListFilterState,
   isMergeConflictState,
   IMultiCommitOperationState,
   IConstrainedValue,
@@ -2374,13 +2375,22 @@ export class AppStore extends TypedBaseStore<IAppState> {
     // Start with all the available width
     let available = window.innerWidth
 
+    // // The tutorial currently has a fixed-width sidebar which we have to account
+    // // for so it makes sense to limit the width of the file list in order to
+    // // give the tutorial enough space to show its content.
+    const tutorialMinWidth =
+      this.currentOnboardingTutorialStep === TutorialStep.NotApplicable
+        ? 0
+        : 650
+
     // Working our way from left to right (i.e. giving priority to the leftmost
     // pane when we need to constrain the width)
     //
     // 220 was determined as the minimum value since it is the smallest width
     // that will still fit the placeholder text in the branch selector textbox
     // of the history tab
-    const maxSidebarWidth = available - toolbarButtonsMinWidth
+    const maxSidebarWidth =
+      available - Math.max(toolbarButtonsMinWidth, tutorialMinWidth)
     this.sidebarWidth = constrain(this.sidebarWidth, 220, maxSidebarWidth)
 
     // Now calculate the width we have left to distribute for the other panes
@@ -8322,21 +8332,53 @@ export class AppStore extends TypedBaseStore<IAppState> {
     }
   }
 
-  public _setChangesListFilterText(repository: Repository, filterText: string) {
-    this.repositoryStateCache.updateChangesState(repository, () => ({
-      filterText,
+  public _updateFileListFilter(
+    repository: Repository,
+    filterUpdate: Partial<IFileListFilterState>
+  ) {
+    this.repositoryStateCache.updateChangesState(repository, state => ({
+      fileListFilter: {
+        ...state.fileListFilter,
+        ...filterUpdate,
+      },
     }))
     this.emitUpdate()
   }
 
+  public _setChangesListFilterText(repository: Repository, filterText: string) {
+    this._updateFileListFilter(repository, { filterText })
+  }
+
   public _setIncludedChangesInCommitFilter(
     repository: Repository,
-    includedChangesInCommitFilter: boolean
+    isIncludedInCommit: boolean
   ) {
-    this.repositoryStateCache.updateChangesState(repository, () => ({
-      includedChangesInCommitFilter,
-    }))
-    this.emitUpdate()
+    this._updateFileListFilter(repository, { isIncludedInCommit })
+  }
+
+  public _setFilterNewFiles(repository: Repository, isNewFile: boolean) {
+    this._updateFileListFilter(repository, { isNewFile })
+  }
+
+  public _setFilterModifiedFiles(
+    repository: Repository,
+    isModifiedFile: boolean
+  ) {
+    this._updateFileListFilter(repository, { isModifiedFile })
+  }
+
+  public _setFilterDeletedFiles(
+    repository: Repository,
+    isDeletedFile: boolean
+  ) {
+    this._updateFileListFilter(repository, { isDeletedFile })
+  }
+
+  public _setFilterExcludedFiles(
+    repository: Repository,
+    isExcludedFromCommit: boolean
+  ) {
+    this._updateFileListFilter(repository, { isExcludedFromCommit })
   }
 
   public async _createPushProtectionBypass(

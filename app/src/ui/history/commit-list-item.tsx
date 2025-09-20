@@ -22,9 +22,10 @@ import {
   DropTargetType,
 } from '../../models/drag-drop'
 import classNames from 'classnames'
-import { TooltippedContent } from '../lib/tooltipped-content'
 import { Account } from '../../models/account'
 import { Emoji } from '../../lib/emoji'
+import { enableAccessibleListToolTips } from '../../lib/feature-flag'
+import { TooltippedContent } from '../lib/tooltipped-content'
 
 interface ICommitProps {
   readonly gitHubRepository: GitHubRepository | null
@@ -44,8 +45,8 @@ interface ICommitProps {
    */
   readonly isDraggable?: boolean
   readonly showUnpushedIndicator: boolean
-  readonly unpushedIndicatorTitle?: string
   readonly disableSquashing?: boolean
+  readonly unpushedIndicatorTitle?: string
   readonly accounts: ReadonlyArray<Account>
 }
 
@@ -160,6 +161,7 @@ export class CommitListItem extends React.PureComponent<
               <AvatarStack
                 users={this.state.avatarUsers}
                 accounts={this.props.accounts}
+                tooltip={!enableAccessibleListToolTips()}
               />
               <div className="byline">
                 <CommitAttribution
@@ -202,6 +204,7 @@ export class CommitListItem extends React.PureComponent<
         tagName="div"
         className="unpushed-indicator"
         tooltip={this.props.unpushedIndicatorTitle}
+        disabled={enableAccessibleListToolTips()}
       >
         <Octicon symbol={octicons.arrowUp} />
       </TooltippedContent>
@@ -237,7 +240,7 @@ function renderRelativeTime(date: Date) {
   return (
     <>
       {` • `}
-      <RelativeTime date={date} />
+      <RelativeTime date={date} tooltip={!enableAccessibleListToolTips()} />
     </>
   )
 }
