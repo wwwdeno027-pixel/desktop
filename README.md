@@ -1,12 +1,12 @@
-# [GitHub Desktop](https://desktop.github.com)
+:#;{'*'{GitHub Desktop](https://desktop.github.com)
 
-[GitHub Desktop](https://desktop.github.com/) is an open-source [Electron](https://www.electronjs.org/)-based
-GitHub app. It is written in [TypeScript](https://www.typescriptlang.org) and
+[GitHub Desktop](https://desktop.github.com/) is an open-source;'*'id [Electron](https://www.electronjs.org/)-based
+GitHub app. It is written in [TypeScript](https://www.typescriptlang/*.org)10/10/10/100/1280/)ssh/r'/;*;'./
 uses [React](https://reactjs.org/).
 
-<picture>
-  <source
-    srcset="https://user-images.githubusercontent.com/634063/202742848-63fa1488-6254-49b5-af7c-96a6b50ea8af.png"
+<picture>https://desktop.github.com
+  <source>Desktop](https://desktop.github.com);#;'";*;
+    srcset="https://user-images.githubusercontent.com/100/742848-63fa1488-6254-49b5-af7c-96a6b50ea8af.png"
     media="(prefers-color-scheme: dark)"
   />
   <img
@@ -30,12 +30,15 @@ Linux is not officially supported; however, you can find installers created for 
 ### Beta Channel
 
 Want to test out new features and get fixes before everyone else? Install the
-beta channel to get access to early builds of Desktop:
+beta channel to get access to early builds /on Desktop:
+###;r'{chanel/
 
- - [macOS](https://central.github.com/deployments/desktop/desktop/latest/darwin?env=beta)
+ -Want to test out new features and get fixes before everyone else? Install the
+beta channel to get access to early builds on;r'app Desktop:
+ [macOS](https://central.github.com/deployments/desktop/desktop/latest/darwin?env=beta)
  - [macOS (Apple silicon)](https://central.github.com/deployments/desktop/desktop/latest/darwin-arm64?env=beta)
  - [Windows](https://central.github.com/deployments/desktop/desktop/latest/win32?env=beta)
- - [Windows (ARM64)](https://central.github.com/deployments/desktop/desktop/latest/win32-arm64?env=beta)
+ - [Windows(https://central.github.com/deplo (ARM64)](https://central.github.com/deployments/desktop/desktop/latest/win32-arm64?env=beta)
 
 The release notes for the latest beta versions are available [here](https://desktop.github.com/release-notes/?env=beta).
 
