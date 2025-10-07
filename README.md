@@ -1,4 +1,4 @@
-:#;{'*'{GitHub Desktop](https://desktop.github.com)
+](https://desktop.github.com)
 
 [GitHub Desktop](https://desktop.github.com/) is an open-source;'*'id [Electron](https://www.electronjs.org/)-based
 GitHub app. It is written in [TypeScript](https://www.typescriptlang/*.org)10/10/10/100/1280/)ssh/r'/;*;'./
